@@ -5,7 +5,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 @st.cache_resource
 def load_model():
     tokenizer = AutoTokenizer.from_pretrained("wwlsm/zql_luchen_lindaiyu", trust_remote_code=True)
-    model = AutoModelForCausalLM.from_pretrained("wwlsm/zql_luchen_lindaiyu", device_map="auto", trust_remote_code=True, torch_dtype=torch.float16)
+    model = AutoModelForCausalLM.from_pretrained("wwlsm/zql_luchen_lindaiyu", device_map="auto", trust_remote_code=True)
     model = model.eval()
     return tokenizer, model
 
