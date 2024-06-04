@@ -4,8 +4,8 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 
 @st.cache_resource
 def load_model():
-    tokenizer = AutoTokenizer.from_pretrained("./model/", trust_remote_code=True)
-    model = AutoModelForCausalLM.from_pretrained("./model", device_map="auto", trust_remote_code=True, torch_dtype=torch.float16)
+    tokenizer = AutoTokenizer.from_pretrained("wwlsm/zql_luchen_lindaiyu", trust_remote_code=True)
+    model = AutoModelForCausalLM.from_pretrained("wwlsm/zql_luchen_lindaiyu", device_map="auto", trust_remote_code=True, torch_dtype=torch.float16)
     model = model.eval()
     return tokenizer, model
 
@@ -34,15 +34,4 @@ def main():
         st.write("Assistant:", response)
 
 if __name__ == "__main__":
-    # import argparse
-
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("--port", type=int, default=8501, help="Port number for the Streamlit server")
-    # parser.add_argument("--ip", type=str, default="localhost", help="IP address for the Streamlit server")
-    # args = parser.parse_args()
-
-    # st.set_page_config(page_title="InternLM2-Chat-7B Chatbot")
-    # main(port=7899, address="127.0.0.1")
     main()
-
-    # st.run(server_port=args.port, server_address=args.ip)
