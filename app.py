@@ -12,7 +12,8 @@ def load_model():
                                                 #         # 量化数据的数据格式
                                                 #         bnb_4bit_compute_dtype=torch.bfloat16
                                                 #     ),
-                                                 device_map="auto", trust_remote_code=True)
+                                                #  device_map="auto", 
+                                                 trust_remote_code=True)
     model = model.eval()
     return tokenizer, model
 
