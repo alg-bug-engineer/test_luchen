@@ -16,9 +16,43 @@ def load_model():
                                                  trust_remote_code=True)
     model = model.eval()
     return tokenizer, model
+    
+def add_custom_css():
+    st.markdown(
+        """
+        <style>
+        .main-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #ff69b4;
+            text-align: center;
+        }
+        .user-input {
+            font-size: 18px;
+        }
+        .response {
+            font-size: 18px;
+            color: #4b0082;
+        }
+        .stTextInput {
+            border: 2px solid #ff69b4;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
 def main():
-    st.title("黛玉妹妹陪你聊")
+    add_custom_css()
+    
+    col1, col2, col3 = st.columns([1, 2, 1])
+    
+    with col1:
+        st.image("https://oss.laf.dev/t62x87-imgs/11111.png", use_column_width=True)  
+    with col2:
+        st.write("<div class='main-title'>黛玉妹妹陪你聊</div>", unsafe_allow_html=True)
+    with col3:
+        st.write("") 
     
     tokenizer, model = load_model()
     
