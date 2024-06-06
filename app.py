@@ -6,8 +6,16 @@ import time
 # 加载模型和tokenizer的函数
 @st.cache_resource
 def load_model():
-    tokenizer = AutoTokenizer.from_pretrained("gpt2")
-    model = AutoModelForCausalLM.from_pretrained("gpt2")
+    tokenizer = AutoTokenizer.from_pretrained("wwlsm/zql_luchen_lindaiyu", trust_remote_code=True)
+    model = AutoModelForCausalLM.from_pretrained("wwlsm/zql_luchen_lindaiyu",
+                                                 #  quantization_config = BitsAndBytesConfig(
+                                                 #         # 量化数据类型设置
+                                                 #         bnb_4bit_quant_type="nf4",
+                                                 #         # 量化数据的数据格式
+                                                 #         bnb_4bit_compute_dtype=torch.bfloat16
+                                                 #     ),
+                                                 #  device_map="auto",
+                                                 trust_remote_code=True)
     model = model.eval()
     return tokenizer, model
 
