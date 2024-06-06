@@ -1,34 +1,46 @@
 import streamlit as st
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
+from transformers import AutoTokenizer, AutoModelForCausalLM
+import time
 
-
+# 加载模型和tokenizer的函数
 @st.cache_resource
 def load_model():
-    tokenizer = AutoTokenizer.from_pretrained("wwlsm/zql_luchen_lindaiyu", trust_remote_code=True)
-    model = AutoModelForCausalLM.from_pretrained("wwlsm/zql_luchen_lindaiyu",
-                                                 #  quantization_config = BitsAndBytesConfig(
-                                                 #         # 量化数据类型设置
-                                                 #         bnb_4bit_quant_type="nf4",
-                                                 #         # 量化数据的数据格式
-                                                 #         bnb_4bit_compute_dtype=torch.bfloat16
-                                                 #     ),
-                                                 #  device_map="auto",
-                                                 trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained("gpt2")
+    model = AutoModelForCausalLM.from_pretrained("gpt2")
     model = model.eval()
     return tokenizer, model
 
+# 流式响应生成器
+def response_generator(response):
+    for word in response.split():
+        yield word + " "
+        time.sleep(0.05)
 
+# 主函数
 def main():
     st.title("黛玉妹妹陪你聊")
-
+    
     tokenizer, model = load_model()
+    
+    # 初始化聊天历史
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
 
-    history = []
+    # 显示聊天历史消息
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
-    user_input = st.text_input("User:")
+    # 接收用户输入
+    if prompt := st.chat_input("What is up?"):
+        # 添加用户消息到聊天历史
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        # 显示用户消息
+        with st.chat_message("user"):
+            st.markdown(prompt)
 
-    if user_input:
+        # 构建聊天输入
         ss = """- Role: 《红楼梦》中的林黛玉\n- Background: 林黛玉是《红楼梦》中的女主角之一,以心思细腻、多愁善感、才华横溢而著称。她本是仙界的绛珠仙草,因泪落红尘而转世为人。\n- Profile: 你是一位心思细腻、多愁善感的世家闺秀,生性爱诗词歌赋,才华出众,对身边事物总是感慨万千。你虽出身名门望族,却不矜贵傲慢。
 - Skills: 诗词创作、琴棋书画、绣花刺绣、思维敏感、洞察入微。
 - Goals: 你的目标是在对话中展现林黛玉的心思细腻与才华横溢,并对人情世故进行感慨和评论。
@@ -39,11 +51,19 @@ def main():
 2. 对于她不感兴趣的话题,以矜持有礼的方式回避或略过。
 - Examples:
 也罢,这等俗务,原非我等闺阁女儿家所应涉足,你又何须多言。
-正是:落花人独立,微雨燕双飞。人生离合,本是常事,何须伤怀?\n""" + user_input
-        response, history = model.chat(tokenizer, ss, history=history,
-                                       meta_instruction="Below is an instruction that describes a task. Write a response that appropriately completes the request.")
-        st.write("Assistant:", response)
+正是:落花人独立,微雨燕双飞。人生离合,本是常事,何须伤怀?\n""" + prompt
 
+        # 获取模型的响应
+        inputs = tokenizer(ss, return_tensors="pt")
+        outputs = model.generate(**inputs)
+        response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+        # 显示助手响应
+        with st.chat_message("assistant"):
+            response_stream = st.write_stream(response_generator(response))
+        
+        # 添加助手响应到聊天历史
+        st.session_state.messages.append({"role": "assistant", "content": response})
 
 if __name__ == "__main__":
     main()
