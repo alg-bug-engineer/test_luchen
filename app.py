@@ -55,7 +55,7 @@ def main():
 
         # 获取模型的响应
         inputs = tokenizer(ss, return_tensors="pt")
-        outputs = model.generate(**inputs)
+        outputs = model.generate(**inputs, max_new_tokens=100)  # 设置max_new_tokens
         response = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
         # 显示助手响应
