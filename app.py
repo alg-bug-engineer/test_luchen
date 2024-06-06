@@ -41,7 +41,7 @@ def main():
             st.markdown(message["content"])
 
     # 接收用户输入
-    if prompt := st.chat_input("What is up?"):
+    if prompt := st.chat_input("你可以问我关于种植方面的问题，比如“番茄怎么种?"):
         # 添加用户消息到聊天历史
         st.session_state.messages.append({"role": "user", "content": prompt})
         # 显示用户消息
