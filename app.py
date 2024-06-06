@@ -41,7 +41,7 @@ def main():
             st.markdown(message["content"])
 
     # 接收用户输入
-    if prompt := st.chat_input("你可以问我关于种植方面的问题，比如“番茄怎么种?"):
+    if prompt := st.chat_input("What is up?"):
         # 添加用户消息到聊天历史
         st.session_state.messages.append({"role": "user", "content": prompt})
         # 显示用户消息
@@ -65,6 +65,9 @@ def main():
         inputs = tokenizer(ss, return_tensors="pt")
         outputs = model.generate(**inputs, max_new_tokens=50)  # 设置max_new_tokens
         response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+        # 移除输入提示，确保只显示生成的响应
+        response = response[len(ss):].strip()
 
         # 显示助手响应
         with st.chat_message("assistant"):
