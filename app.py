@@ -1,5 +1,6 @@
 import streamlit as st
 import base64
+import requests
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 import random
@@ -38,7 +39,18 @@ def response_generator(model, tokenizer, prompt, history):
         time.sleep(0.05)
     return response, history
     
-st.audio(audio_bytes)
+def text_to_speech_api(text, api_url):
+    payload = {"text": response}
+    response = requests.post(api_url, json=payload)
+    if response.status_code == 200:
+        audio_file_path = "output.wav"
+        with open(audio_file_path, "wb") as audio_file:
+            audio_file.write(response.content)
+        return audio_file_path
+    else:
+        st.error("生成语音失败，请再试一次")
+        return None
+
 
 def main():
     st.title("黛玉妹妹陪你聊")
@@ -55,15 +67,15 @@ def main():
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    # Accept user input
-    if prompt := st.chat_input("What is up?"):
-        # Add user message to chat history
+    # 用户输入
+    if prompt := st.chat_input("可以问我关于种植的问题哦~"):
+        # 将用户消息添加到聊天记录
         st.session_state.messages.append({"role": "user", "content": prompt})
         # Display user message in chat message container
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        # Display assistant response in chat message container
+        # 在聊天消息容器中显示助手响应
         with st.chat_message("assistant"):
             response_stream = response_generator(model, tokenizer, prompt, st.session_state.history)
             response = ""
@@ -73,6 +85,13 @@ def main():
             # Add assistant response to chat history
             st.session_state.messages.append({"role": "assistant", "content": response})
             st.session_state.history = st.session_state.history  # 更新 history
+    # 语音测试
+    api_url = "http://your-server-address:port/your-text-to-speech-endpoint"
+    audio_file = text_to_speech_api(response, api_url)
+    if audio_file:
+        audio_bytes = open(audio_file, "rb").read()
+        st.audio(audio_bytes, format='audio/wav')
+        os.remove(audio_file)
 
 if __name__ == "__main__":
     main()
