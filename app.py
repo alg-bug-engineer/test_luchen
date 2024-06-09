@@ -5,6 +5,7 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 import random
 import time
+import os
 
 @st.cache_resource
 def load_model():
@@ -38,14 +39,14 @@ def response_generator(model, tokenizer, prompt, history):
         yield word + " "
         time.sleep(0.05)
     return response, history
-    
+
 def text_to_speech_api(text, api_url):
     # Prepare the GET request parameters
     params = {
         "refer_wav_path": "lindaiyu.wav",
         "prompt_text": "若气温低于十五度，其生长便会放缓。此乃天地自然之理，无需多言。",
         "prompt_language": "zh",
-        "text": response,
+        "text": text,  # 使用传入的text参数
         "text_language": "zh"
     }
     
@@ -57,12 +58,11 @@ def text_to_speech_api(text, api_url):
         audio_file_path = "output.wav"
         # 音频内容写入文件
         with open(audio_file_path, "wb") as audio_file:
-            audio_file.write(response.content)
+            audio_file.write(result.content)  # 注意这里应该是result.content而不是response.content
         return audio_file_path
     else:
         st.error("语音生成失败，请重试")
         return None
-
 
 def main():
     st.title("黛玉妹妹陪你聊")
@@ -97,18 +97,15 @@ def main():
             # Add assistant response to chat history
             st.session_state.messages.append({"role": "assistant", "content": response})
             st.session_state.history = st.session_state.history  # 更新 history
-    # 语音测试
-    # 使用文本到语音API将响应转换为语音
+
+            # 使用文本到语音API将响应转换为语音
             api_url = "http://127.0.0.1:9880"
             audio_file = text_to_speech_api(response, api_url)
-            # if audio_file:
-            #     audio_bytes = open(audio_file, "rb").read()
-            #     st.audio(audio_bytes, format='audio/wav')
-            #     os.remove(audio_file)
             if audio_file:
                 with open(audio_file, "rb") as audio:
                     audio_bytes = audio.read()
                     st.audio(audio_bytes, format='audio/wav')
                 os.remove(audio_file)
+
 if __name__ == "__main__":
     main()
