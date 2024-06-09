@@ -42,7 +42,7 @@ def response_generator(model, tokenizer, prompt, history):
 def text_to_speech_api(text, api_url):
     # Prepare the GET request parameters
     params = {
-        "refer_wav_path": "",
+        "refer_wav_path": "lindaiyu.wav",
         "prompt_text": "若气温低于十五度，其生长便会放缓。此乃天地自然之理，无需多言。",
         "prompt_language": "zh",
         "text": response,
@@ -98,12 +98,17 @@ def main():
             st.session_state.messages.append({"role": "assistant", "content": response})
             st.session_state.history = st.session_state.history  # 更新 history
     # 语音测试
-    api_url = "http://your-server-address:port/your-text-to-speech-endpoint"
-    audio_file = text_to_speech_api(response, api_url)
-    if audio_file:
-        audio_bytes = open(audio_file, "rb").read()
-        st.audio(audio_bytes, format='audio/wav')
-        os.remove(audio_file)
-
+    # 使用文本到语音API将响应转换为语音
+            api_url = "http://127.0.0.1:9880"
+            audio_file = text_to_speech_api(response, api_url)
+            # if audio_file:
+            #     audio_bytes = open(audio_file, "rb").read()
+            #     st.audio(audio_bytes, format='audio/wav')
+            #     os.remove(audio_file)
+            if audio_file:
+                with open(audio_file, "rb") as audio:
+                    audio_bytes = audio.read()
+                    st.audio(audio_bytes, format='audio/wav')
+                os.remove(audio_file)
 if __name__ == "__main__":
     main()
