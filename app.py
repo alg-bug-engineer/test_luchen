@@ -40,15 +40,27 @@ def response_generator(model, tokenizer, prompt, history):
     return response, history
     
 def text_to_speech_api(text, api_url):
-    payload = {"text": response}
-    response = requests.post(api_url, json=payload)
+    # Prepare the GET request parameters
+    params = {
+        "refer_wav_path": "",
+        "prompt_text": "若气温低于十五度，其生长便会放缓。此乃天地自然之理，无需多言。",
+        "prompt_language": "zh",
+        "text": response,
+        "text_language": "zh"
+    }
+    
+    # Make the GET request to the text-to-speech API
+    response = requests.get(api_url, params=params)
+    
+    # Check if the request was successful
     if response.status_code == 200:
         audio_file_path = "output.wav"
+        # Write the audio content to a file
         with open(audio_file_path, "wb") as audio_file:
             audio_file.write(response.content)
         return audio_file_path
     else:
-        st.error("生成语音失败，请再试一次")
+        st.error("Failed to generate speech. Please try again.")
         return None
 
 
