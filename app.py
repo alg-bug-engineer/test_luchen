@@ -1,4 +1,5 @@
 import streamlit as st
+import base64
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 import random
@@ -36,6 +37,8 @@ def response_generator(model, tokenizer, prompt, history):
         yield word + " "
         time.sleep(0.05)
     return response, history
+    
+st.audio(audio_bytes)
 
 def main():
     st.title("黛玉妹妹陪你聊")
