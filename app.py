@@ -33,7 +33,7 @@ def response_generator(model, tokenizer, prompt, history):
 - Examples:
 也罢,这等俗务,原非我等闺阁女儿家所应涉足,你又何须多言。
 正是:落花人独立,微雨燕双飞。人生离合,本是常事,何须伤怀?\n""" + prompt
-    response, history = model.chat(tokenizer, ss, history=history, meta_instruction="Below is an instruction that describes a task. Write a response that appropriately completes the request.")
+    response, history = model.chat(tokenizer, ss, history=history, meta_instruction="下面是描述任务的指令。编写一个适当地完成请求的响应。")
     for word in response.split():
         yield word + " "
         time.sleep(0.05)
@@ -49,18 +49,18 @@ def text_to_speech_api(text, api_url):
         "text_language": "zh"
     }
     
-    # Make the GET request to the text-to-speech API
-    response = requests.get(api_url, params=params)
+    # 向文本到语音转换API发出GET请求
+    result = requests.get(api_url, params=params)
     
-    # Check if the request was successful
-    if response.status_code == 200:
+    # 检查请求是否成功
+    if result.status_code == 200:
         audio_file_path = "output.wav"
-        # Write the audio content to a file
+        # 音频内容写入文件
         with open(audio_file_path, "wb") as audio_file:
             audio_file.write(response.content)
         return audio_file_path
     else:
-        st.error("Failed to generate speech. Please try again.")
+        st.error("语音生成失败，请重试")
         return None
 
 
