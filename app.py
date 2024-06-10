@@ -99,13 +99,13 @@ def main():
             st.session_state.history = st.session_state.history  # 更新 history
 
             # 使用文本到语音API将响应转换为语音
-            api_url = "http://127.0.0.1:9880"
-            audio_file = text_to_speech_api(response, api_url)
-            if audio_file:
-                with open(audio_file, "rb") as audio:
-                    audio_bytes = audio.read()
-                    st.audio(audio_bytes, format='audio/wav')
-                os.remove(audio_file)
+            # api_url = "http://127.0.0.1:9880"
+            # audio_file = text_to_speech_api(response, api_url)
+            # if audio_file:
+            #     with open(audio_file, "rb") as audio:
+            #         audio_bytes = audio.read()
+            #         st.audio(audio_bytes, format='audio/wav')
+            #     os.remove(audio_file)
 
 if __name__ == "__main__":
     main()
