@@ -44,7 +44,7 @@ def text_to_speech_api(text, api_url):
     # Prepare the GET request parameters
     params = {
         "refer_wav_path": "https://github.com/alg-bug-engineer/test_luchen/blob/main/lindaiyu.wav",
-        "prompt_text": "若气温低于十五度，其生长便会放缓。此乃天地自然之理，无需多言。",
+        "prompt_text": "最以生长至温度，当在二十余度至三十余度之间。",
         "prompt_language": "zh",
         "text": text,  # 使用传入的text参数
         "text_language": "zh"
