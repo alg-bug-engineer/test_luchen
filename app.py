@@ -43,7 +43,7 @@ def response_generator(model, tokenizer, prompt, history):
 def text_to_speech_api(text, api_url):
     # Prepare the GET request parameters
     params = {
-        "refer_wav_path": "https://github.com/alg-bug-engineer/test_luchen/blob/main/lindaiyu.wav",
+        "refer_wav_path": "https://oss.laf.run/faqczu-cloud-bin/lindaiyu.wav?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=faqczu%2F20240611%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240611T010237Z&X-Amz-Expires=900&X-Amz-Signature=58c87c0d6ff8d7fa7813e6493f4728600bfffa20d3582971938127d8412fab91&X-Amz-SignedHeaders=host",
         "prompt_text": "最以生长至温度，当在二十余度至三十余度之间。",
         "prompt_language": "zh",
         "text": text,  # 使用传入的text参数
