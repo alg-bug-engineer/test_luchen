@@ -41,6 +41,10 @@ def response_generator(model, tokenizer, prompt, history):
     return response, history
 
 def text_to_speech_api(text, api_url):
+    file_path = "./lindaiyu.wav"
+    if not os.path.exists(file_path):
+        st.error(f"文件 {file_path} 不存在，请检查路径是否正确。")
+        return None
     # Prepare the GET request parameters
     params = {
         "refer_wav_path": "./lindaiyu.wav",
