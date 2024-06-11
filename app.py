@@ -42,10 +42,10 @@ def response_generator(model, tokenizer, prompt, history):
 
 def text_to_speech_api(text, api_url):
     # 转换
-    wav_path = quote("http://114.217.52.165:8090/oksn/static/upload/voice/ldy.wav")
+  
     # Prepare the GET request parameters
     params = {
-        "refer_wav_path": wav_path,
+        "refer_wav_path":'/root/GPT-SoVITS-main/output/slicer_opt/lindaiyu.wav',
         "prompt_text": "最以生长至温度，当在二十余度至三十余度之间。",
         "prompt_language": "zh",
         "text": text,  # 使用传入的text参数
