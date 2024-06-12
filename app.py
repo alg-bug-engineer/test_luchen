@@ -41,8 +41,6 @@ def response_generator(model, tokenizer, prompt, history):
     return response, history
 
 def text_to_speech_api(text, api_url):
-    # 转换
-  
     # Prepare the GET request parameters
     params = {
         "refer_wav_path":'/root/GPT-SoVITS-main/output/slicer_opt/lindaiyu.wav',
@@ -91,11 +89,12 @@ def main():
 
         # 在聊天消息容器中显示助手响应
         with st.chat_message("assistant"):
+            response_container = st.empty()
             response_stream = response_generator(model, tokenizer, prompt, st.session_state.history)
             response = ""
             for word in response_stream:
                 response += word
-                st.markdown(response)
+                response_container.markdown(response)
             # Add assistant response to chat history
             st.session_state.messages.append({"role": "assistant", "content": response})
             st.session_state.history = st.session_state.history  # 更新 history
