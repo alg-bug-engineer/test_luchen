@@ -102,7 +102,8 @@ def main():
 
             # 使用文本到语音API将响应转换为语音
             api_url = "http://223.108.203.142:9880/"
-            audio_file = text_to_speech_api(response, api_url)
+            with st.spinner('正在生成语音，请稍候...'):
+                audio_file = text_to_speech_api(response, api_url)
             if audio_file:
                 with open(audio_file, "rb") as audio:
                     audio_bytes = audio.read()
